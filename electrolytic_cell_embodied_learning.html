@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>電解池｜具身學習實驗室</title>
+<style>
+:root{
+  --bg:#08111f; --panel:#0f1c2e; --panel2:#13243a; --ink:#eef7ff; --muted:#a9bdd2;
+  --cyan:#45d9ff; --blue:#6e8cff; --orange:#ffae57; --pink:#ff7aa8; --green:#65e3a2;
+  --line:#26415f; --warn:#ffd166; --bad:#ff6b6b; --good:#64e6a4;
+  --shadow:0 18px 50px rgba(0,0,0,.34);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 18% -10%,#18395e 0,transparent 34%),linear-gradient(180deg,#07101d,#0a1321 72%);color:var(--ink);font-family:Inter,"PingFang TC","Microsoft JhengHei","Noto Sans TC",system-ui,sans-serif;min-height:100vh}
+button,select{font:inherit}
+button{cursor:pointer}
+.app{max-width:1500px;margin:0 auto;padding:18px}
+header{display:flex;gap:18px;align-items:center;justify-content:space-between;padding:16px 18px;margin-bottom:14px;border:1px solid var(--line);border-radius:22px;background:rgba(15,28,46,.78);backdrop-filter:blur(14px);box-shadow:var(--shadow)}
+.brand{display:flex;gap:14px;align-items:center}.logo{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,var(--cyan),var(--blue));color:#06101c;font-weight:900;box-shadow:0 0 30px rgba(69,217,255,.25)}
+h1{font-size:clamp(20px,2vw,30px);margin:0}.sub{color:var(--muted);font-size:13px;margin-top:4px}.header-actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+.pill, .btn{border:1px solid var(--line);border-radius:999px;background:#10233a;color:var(--ink);padding:9px 13px}.btn.primary{border-color:#3f8bad;background:linear-gradient(135deg,#163c57,#244d82)}.btn.good{border-color:#2b8d68;background:#143f34}.btn.ghost{background:transparent}.btn:focus-visible,.ion:focus-visible,select:focus-visible{outline:3px solid rgba(69,217,255,.34);outline-offset:2px}
+.layout{display:grid;grid-template-columns:290px minmax(0,1fr) 330px;gap:14px;align-items:start}.panel{border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,rgba(18,35,56,.96),rgba(12,25,42,.96));box-shadow:var(--shadow);overflow:hidden}.panel h2{font-size:15px;margin:0}.ph{padding:14px 15px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.pb{padding:15px}.step{display:flex;gap:11px;padding:12px;border:1px solid transparent;border-radius:14px;margin-bottom:8px;transition:.2s}.step.active{background:#15304b;border-color:#2f6489}.step.done{background:#113326;border-color:#236447}.stepnum{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;background:#223b58;color:#cfe9ff;font-weight:800}.step.done .stepnum{background:#1d8b5f}.step b{font-size:14px}.step p{font-size:12px;color:var(--muted);margin:4px 0 0;line-height:1.55}.mini-rule{padding:11px 12px;border-radius:13px;background:#0b1727;border:1px solid #203650;margin-top:10px}.mini-rule b{font-size:13px}.mini-rule p{font-size:12px;line-height:1.55;color:var(--muted);margin:5px 0 0}
+.lab{min-height:760px}.lab-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.lab-top select{background:#0b1828;color:var(--ink);border:1px solid var(--line);padding:9px 11px;border-radius:11px}.bench{position:relative;min-height:455px;padding:18px;background:linear-gradient(180deg,#0a1728,#0b1e31 65%,#0d1b2b);overflow:hidden}.bench:before{content:"";position:absolute;inset:auto 0 0;height:100px;background:linear-gradient(180deg,rgba(30,62,80,.05),rgba(33,65,79,.52));border-top:1px solid #345169}.power{position:absolute;left:50%;top:14px;transform:translateX(-50%);width:170px;height:60px;border-radius:14px;background:#17293b;border:1px solid #36566f;display:grid;grid-template-columns:1fr 1fr;align-items:center;text-align:center;font-weight:900;z-index:5}.terminal{font-size:23px}.terminal.neg{color:var(--cyan)}.terminal.pos{color:var(--orange)}
+.wire{position:absolute;top:72px;height:112px;width:2px;background:#7a91a8;z-index:2}.wire.left{left:34%}.wire.right{right:34%}.wire:before{content:"";position:absolute;top:0;width:calc(50vw - 112px);max-width:245px;height:2px;background:#7a91a8}.wire.left:before{right:0}.wire.right:before{left:0}.electron-dot{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan);opacity:0}.running .electron-dot{opacity:1;animation:electron 2.2s linear infinite}.electron-dot.e1{top:94px;left:30%;animation-delay:0s}.electron-dot.e2{top:94px;right:30%;animation-delay:1.1s}@keyframes electron{0%{transform:translateY(0);opacity:.1}40%{opacity:1}100%{transform:translateY(90px);opacity:.1}}
+.beaker{position:absolute;left:12%;right:12%;top:170px;height:240px;border:3px solid #7fa5bd;border-top:0;border-radius:0 0 34px 34px;background:linear-gradient(180deg,rgba(48,163,196,.28),rgba(32,101,146,.44));box-shadow:inset 0 -18px 60px rgba(54,192,255,.1)}.liquid-line{position:absolute;left:0;right:0;top:18px;height:2px;background:#6fdfff;opacity:.65}.electrode{position:absolute;top:-36px;width:42px;height:185px;border-radius:7px 7px 10px 10px;background:linear-gradient(90deg,#4f6274,#96a9b7,#4b5d6f);border:1px solid #b7c8d4;z-index:4;box-shadow:0 8px 18px rgba(0,0,0,.25)}.electrode.left{left:22%}.electrode.right{right:22%}.electrode.active-cu{background:linear-gradient(90deg,#6e321f,#df8f61,#7e3b26);border-color:#eda278}.electrode-label{position:absolute;top:152px;left:50%;transform:translateX(-50%);white-space:nowrap;border-radius:8px;background:#07111fdd;border:1px solid #34516a;font-size:12px;padding:5px 7px}.zone{position:absolute;bottom:12px;width:40%;min-height:68px;border:1px dashed #5d7990;border-radius:14px;background:rgba(5,13,24,.35);display:flex;flex-wrap:wrap;align-content:center;gap:6px;padding:9px;z-index:3}.zone.left{left:3%}.zone.right{right:3%}.zone.over{border-color:var(--cyan);box-shadow:inset 0 0 30px rgba(69,217,255,.12)}.zone-title{width:100%;font-size:11px;color:#c6d9e8;opacity:.85}.zone-hint{font-size:11px;color:#7f9ab0}.ion-stage{position:absolute;left:6%;right:6%;top:42px;bottom:94px;pointer-events:none}.float-ion{position:absolute;padding:6px 9px;border-radius:999px;font-size:12px;font-weight:800;border:1px solid currentColor;background:#0a1727cc;animation:floaty 5s ease-in-out infinite;transition:.5s}.float-ion.cation{color:#69d5ff}.float-ion.anion{color:#ffb565}.running .float-ion.cation{transform:translateX(-55px)}.running .float-ion.anion{transform:translateX(55px)}@keyframes floaty{50%{margin-top:-8px}}
+.bubble{position:absolute;width:9px;height:9px;border:1px solid #c9f4ff;border-radius:50%;opacity:0;z-index:8}.running .bubble{opacity:.8;animation:bubbleUp 2.2s ease-in infinite}.bubble.b1{left:25%;bottom:55px}.bubble.b2{left:28%;bottom:60px;animation-delay:.8s}.bubble.b3{right:25%;bottom:55px;animation-delay:.3s}.bubble.b4{right:28%;bottom:66px;animation-delay:1.2s}@keyframes bubbleUp{0%{transform:translateY(0) scale(.6);opacity:0}35%{opacity:.85}100%{transform:translateY(-145px) scale(1.4);opacity:0}}
+.deposit{position:absolute;top:8px;left:-3px;right:-3px;height:0;border-radius:4px;background:#c7784e;opacity:.9;transition:1.3s}.running .deposit.on{height:118px}.anode-wear{position:absolute;bottom:0;left:0;right:0;height:0;background:#0b1e31;transition:1.3s}.running .anode-wear.on{height:36px}
+.case-note{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);font-size:12px;background:#07121fcc;border:1px solid #294865;border-radius:12px;padding:7px 10px;color:#d9e9f7;z-index:6;text-align:center;max-width:70%}.feedback{padding:12px 15px;border-top:1px solid var(--line);min-height:58px;color:#d9e9f6;font-size:13px;line-height:1.5}.feedback.good{background:#102d23;color:#bff6dd}.feedback.bad{background:#331a22;color:#ffc0c0}
+.task-area{padding:15px;border-top:1px solid var(--line);background:#0c192a}.task-title{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.task-title b{font-size:14px}.task-title span{font-size:12px;color:var(--muted)}.ions{display:flex;gap:8px;flex-wrap:wrap}.ion{border:1px solid #46617a;background:#10253a;color:#f3fbff;border-radius:999px;padding:8px 11px;font-weight:800;user-select:none;touch-action:none}.ion[data-charge="+"]{border-color:#2e7fa6}.ion[data-charge="-"]{border-color:#9f6b35}.ion.selected{box-shadow:0 0 0 3px rgba(69,217,255,.24)}.task-actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}.small{font-size:12px;padding:8px 11px}
+.kcards{display:grid;gap:9px}.kcard{border:1px solid #25425f;background:#0b1727;border-radius:14px;padding:12px}.kcard.locked{opacity:.48;filter:saturate(.5)}.kcard h3{font-size:13px;margin:0 0 7px}.kcard p{font-size:12px;color:var(--muted);line-height:1.55;margin:0}.eq{display:block;margin-top:7px;color:#dff5ff;background:#09131f;border-radius:8px;padding:7px;font-family:"SFMono-Regular",Consolas,monospace;font-size:11px;overflow:auto}.tag{display:inline-flex;align-items:center;gap:5px;border:1px solid #32516a;border-radius:999px;padding:4px 8px;font-size:11px;color:#cfe6f5}.tag.green{border-color:#2f7459;color:#98edc5}.tag.orange{border-color:#805735;color:#ffd0a1}
+.quiz{margin-top:14px}.q{padding:12px;border:1px solid #29455f;border-radius:14px;margin-bottom:9px;background:#0b1727}.q p{font-size:13px;margin:0 0 8px;line-height:1.45}.opts{display:grid;gap:6px}.opt{border:1px solid #29455f;border-radius:10px;background:#102238;color:#eaf6ff;padding:8px 9px;text-align:left;font-size:12px}.opt.correct{border-color:#2e8b66;background:#13392d}.opt.wrong{border-color:#9d4450;background:#3b1b23}.score{font-size:12px;color:var(--muted)}
+.footer-note{margin-top:14px;padding:12px 14px;border:1px solid var(--line);border-radius:16px;color:#8fa8bb;font-size:12px;line-height:1.6;background:#0a1625}.footer-note a{color:#80ddff}
+.modal{position:fixed;inset:0;background:rgba(3,8,14,.72);display:none;place-items:center;padding:20px;z-index:30}.modal.show{display:grid}.modal-card{max-width:760px;width:100%;max-height:85vh;overflow:auto;border:1px solid #335672;background:#0c1a2b;border-radius:20px;padding:20px;box-shadow:var(--shadow)}.modal-card h2{margin-top:0}.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.rulebox{padding:12px;border:1px solid #29465e;background:#0a1726;border-radius:13px}.rulebox b{font-size:13px}.rulebox p{font-size:12px;color:var(--muted);line-height:1.55}.close{float:right}
+@media(max-width:1100px){.layout{grid-template-columns:240px 1fr}.right{grid-column:1/-1}.right .pb{display:grid;grid-template-columns:1fr 1fr;gap:12px}.quiz{margin-top:0}}
+@media(max-width:760px){.app{padding:9px}header{align-items:flex-start;flex-direction:column}.layout{grid-template-columns:1fr}.left{order:2}.lab{order:1;min-height:auto}.right{order:3}.right .pb{display:block}.bench{min-height:410px;padding:0}.beaker{left:4%;right:4%;top:165px}.wire.left{left:27%}.wire.right{right:27%}.case-note{max-width:92%;width:92%}.zone{width:45%}.electrode.left{left:18%}.electrode.right{right:18%}.rules-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand"><div class="logo">⚡</div><div><h1>電解池｜具身學習實驗室</h1><div class="sub">把「看懂」變成「做對」：移動離子、接通電源、觀察放電，再寫出反應。</div></div></div>
+  <div class="header-actions"><span class="pill" id="progressPill">掌握度 0%</span><button class="btn ghost" id="rulesBtn">核心規律</button><button class="btn primary" id="resetBtn">重新開始</button></div>
+</header>
+
+<div class="layout">
+  <aside class="panel left">
+    <div class="ph"><h2>學習路徑</h2><span class="tag">4 步</span></div>
+    <div class="pb">
+      <div class="step active" data-step="1"><div class="stepnum">1</div><div><b>辨認陰、陽極</b><p>外接電源：負極接陰極，正極接陽極。</p></div></div>
+      <div class="step" data-step="2"><div class="stepnum">2</div><div><b>讓離子「走對邊」</b><p>陽離子 → 陰極；陰離子 → 陽極。</p></div></div>
+      <div class="step" data-step="3"><div class="stepnum">3</div><div><b>判斷誰先放電</b><p>陰極比「誰得電子」；陽極先看電極材料，再比陰離子。</p></div></div>
+      <div class="step" data-step="4"><div class="stepnum">4</div><div><b>連到真實應用</b><p>電鍍、精煉、氯鹼工業與電冶金，其實都在用同一套規律。</p></div></div>
+      <div class="mini-rule"><b>一眼判極</b><p>陰極：還原、得 e⁻、接負極。<br>陽極：氧化、失 e⁻、接正極。</p></div>
+      <div class="mini-rule"><b>水溶液的高頻陷阱</b><p>Na⁺、K⁺、Ca²⁺、Mg²⁺、Al³⁺通常不在水溶液陰極析出，常由水放出 H₂。</p></div>
+    </div>
+  </aside>
+
+  <main class="panel lab">
+    <div class="ph">
+      <div><h2>互動實驗台</h2><div class="sub" id="caseSubtitle">場景：NaCl(aq)＋惰性電極</div></div>
+      <div class="lab-top">
+        <select id="caseSelect" aria-label="選擇電解場景">
+          <option value="nacl">NaCl(aq)｜惰性電極</option>
+          <option value="cuso4">CuSO₄(aq)｜惰性電極</option>
+          <option value="kno3">KNO₃(aq)｜惰性電極</option>
+          <option value="cuso4cu">CuSO₄(aq)｜銅陽極</option>
+          <option value="moltenNaCl">熔融 NaCl｜惰性電極</option>
+        </select>
+        <button class="btn good" id="powerBtn">接通電源</button>
+      </div>
+    </div>
+
+    <div class="bench" id="bench">
+      <div class="power"><div class="terminal neg">−</div><div class="terminal pos">＋</div></div>
+      <div class="wire left"></div><div class="wire right"></div>
+      <div class="electron-dot e1"></div><div class="electron-dot e2"></div>
+      <div class="beaker">
+        <div class="liquid-line"></div>
+        <div class="electrode left" id="cathode"><div class="deposit" id="deposit"></div><div class="electrode-label">陰極（−）</div></div>
+        <div class="electrode right" id="anode"><div class="anode-wear" id="anodeWear"></div><div class="electrode-label">陽極（＋）</div></div>
+        <div class="ion-stage" id="ionStage"></div>
+        <div class="bubble b1"></div><div class="bubble b2"></div><div class="bubble b3"></div><div class="bubble b4"></div>
+        <div class="zone left" id="cathodeZone" data-zone="cathode"><div class="zone-title">陰極區：把「應往這裡移動」的粒子放入</div><div class="zone-hint">陽離子 / 可能被還原的粒子</div></div>
+        <div class="zone right" id="anodeZone" data-zone="anode"><div class="zone-title">陽極區：把「應往這裡移動」的粒子放入</div><div class="zone-hint">陰離子 / 可能被氧化的粒子</div></div>
+      </div>
+      <div class="case-note" id="caseNote">先拖動下方粒子，再接通電源觀察。</div>
+    </div>
+
+    <div class="feedback" id="feedback">任務 1：先記住——陰極接電源負極，發生還原；陽極接正極，發生氧化。</div>
+
+    <div class="task-area">
+      <div class="task-title"><b id="taskTitle">任務 2｜親手安排離子方向</b><span>拖放；手機可先點粒子、再點電極區</span></div>
+      <div class="ions" id="ionTray"></div>
+      <div class="task-actions">
+        <button class="btn small primary" id="checkMoveBtn">檢查遷移</button>
+        <button class="btn small" id="reactionBtn">我已判斷放電物質</button>
+        <button class="btn small ghost" id="clearZonesBtn">清空</button>
+      </div>
+    </div>
+  </main>
+
+  <aside class="panel right">
+    <div class="ph"><h2>知識解鎖</h2><span class="score" id="unlockCount">0 / 4</span></div>
+    <div class="pb">
+      <div class="kcards">
+        <div class="kcard locked" data-card="1"><h3>① 電極核心</h3><p><b>陰極</b>得電子、還原；<b>陽極</b>失電子、氧化。電解池把電能轉成化學能。</p></div>
+        <div class="kcard locked" data-card="2"><h3>② 離子遷移</h3><p>陽離子向陰極；陰離子向陽極。記憶：<b>陰陽相吸</b>。</p></div>
+        <div class="kcard locked" data-card="3"><h3>③ 放電判斷</h3><p>陰極先比較可還原粒子；陽極先看是否為活性電極，若是，常由電極本身失電子。</p><span class="eq" id="caseEq">NaCl(aq)：陰極 H₂；陽極 Cl₂</span></div>
+        <div class="kcard locked" data-card="4"><h3>④ 兩個水的模板</h3><p>陰極放氫生鹼；陽極放氧生酸。它們是判斷許多水溶液電解題的「底層模板」。</p><span class="eq">陰：2H₂O + 2e⁻ → H₂↑ + 2OH⁻</span><span class="eq">陽：2H₂O − 4e⁻ → O₂↑ + 4H⁺</span></div>
+      </div>
+
+      <div class="quiz">
+        <div class="ph" style="padding:10px 0;border:0"><h2>3 題快速檢測</h2><span class="score" id="quizScore">0 / 3</span></div>
+        <div class="q" data-answer="b"><p>1. 電解池陰極一定發生什麼？</p><div class="opts"><button class="opt" data-v="a">氧化、失電子</button><button class="opt" data-v="b">還原、得電子</button><button class="opt" data-v="c">只生成金屬</button></div></div>
+        <div class="q" data-answer="c"><p>2. 惰性電極電解 NaCl(aq)，陽極主要產物是：</p><div class="opts"><button class="opt" data-v="a">Na</button><button class="opt" data-v="b">H₂</button><button class="opt" data-v="c">Cl₂</button></div></div>
+        <div class="q" data-answer="a"><p>3. CuSO₄(aq) 改用銅作陽極時，陽極主要：</p><div class="opts"><button class="opt" data-v="a">Cu → Cu²⁺ + 2e⁻</button><button class="opt" data-v="b">產生 O₂</button><button class="opt" data-v="c">產生 H₂</button></div></div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<div class="footer-note">
+  本介面依據提供的「電解池」學習筆記重構成互動學習活動；為避免把筆記中的個別排版/筆誤帶入教學，方程式與冰晶石等內容按常見高中化學表述整理。原始參考：<a href="https://www.cnblogs.com/xrkforces/p/18032234/chemistry-electrolytic-cell" target="_blank" rel="noopener">博客園｜電化學——電解池</a>。
+</div>
+</div>
+
+<div class="modal" id="rulesModal" role="dialog" aria-modal="true" aria-labelledby="rulesTitle">
+  <div class="modal-card"><button class="btn close" id="closeModal">關閉</button><h2 id="rulesTitle">電解池核心規律｜一頁版</h2>
+    <div class="rules-grid">
+      <div class="rulebox"><b>先看是不是電解池</b><p>有外接電源、反應需要電能推動：通常從電解池角度分析。能量：電能 → 化學能。</p></div>
+      <div class="rulebox"><b>陰、陽極</b><p>陰極接負極：得 e⁻、還原。陽極接正極：失 e⁻、氧化。</p></div>
+      <div class="rulebox"><b>離子方向</b><p>陽離子 → 陰極；陰離子 → 陽極。這是遷移方向，不代表它一定會放電。</p></div>
+      <div class="rulebox"><b>陰極放電</b><p>比較「誰更容易得電子」。水溶液中 Na⁺、K⁺、Ca²⁺、Mg²⁺、Al³⁺等常不析出，而由水生成 H₂。</p></div>
+      <div class="rulebox"><b>陽極放電</b><p>先看陽極材料。活性金屬陽極常先溶解；惰性陽極再比較陰離子與水/OH⁻。</p></div>
+      <div class="rulebox"><b>四類典型結果</b><p>電解水型、電解質型、放氫生鹼型、放氧生酸型；最終都能回到「半反應 + 電子守恆」判斷。</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const cases={
+  nacl:{name:'NaCl(aq)｜惰性電極',ions:[['Na⁺','+'],['Cl⁻','-'],['H₂O','0']],float:[['Na⁺','+'],['Cl⁻','-'],['Na⁺','+'],['Cl⁻','-']],toCathode:['Na⁺'],toAnode:['Cl⁻'], cathode:'2H₂O + 2e⁻ → H₂↑ + 2OH⁻',anode:'2Cl⁻ − 2e⁻ → Cl₂↑',overall:'2NaCl + 2H₂O → H₂↑ + Cl₂↑ + 2NaOH',effect:'陰極放氫生鹼；陽極放氯。整體 pH 有上升趨勢（若產物分區/未充分反應）。',deposit:false,wear:false,anodeCu:false,eq:'NaCl(aq)：陰極 H₂；陽極 Cl₂'},
+  cuso4:{name:'CuSO₄(aq)｜惰性電極',ions:[['Cu²⁺','+'],['SO₄²⁻','-'],['H₂O','0']],float:[['Cu²⁺','+'],['SO₄²⁻','-'],['Cu²⁺','+'],['SO₄²⁻','-']],toCathode:['Cu²⁺'],toAnode:['SO₄²⁻'],cathode:'Cu²⁺ + 2e⁻ → Cu',anode:'2H₂O − 4e⁻ → O₂↑ + 4H⁺',overall:'2CuSO₄ + 2H₂O → 2Cu + O₂↑ + 2H₂SO₄',effect:'Cu²⁺被消耗、陰極析銅；陽極放氧生酸，pH 下降。要恢復原溶液常從補回 CuO 的角度分析。',deposit:true,wear:false,anodeCu:false,eq:'CuSO₄(aq)/惰性：陰極析 Cu；陽極 O₂'},
+  kno3:{name:'KNO₃(aq)｜惰性電極',ions:[['K⁺','+'],['NO₃⁻','-'],['H₂O','0']],float:[['K⁺','+'],['NO₃⁻','-'],['K⁺','+'],['NO₃⁻','-']],toCathode:['K⁺'],toAnode:['NO₃⁻'],cathode:'2H₂O + 2e⁻ → H₂↑ + 2OH⁻',anode:'2H₂O − 4e⁻ → O₂↑ + 4H⁺',overall:'2H₂O → 2H₂↑ + O₂↑',effect:'K⁺、NO₃⁻主要起導電作用，總效果近似電解水；電解質濃度因水減少而增大。',deposit:false,wear:false,anodeCu:false,eq:'KNO₃(aq)：近似電解水，H₂ / O₂'},
+  cuso4cu:{name:'CuSO₄(aq)｜銅陽極',ions:[['Cu²⁺','+'],['SO₄²⁻','-'],['H₂O','0']],float:[['Cu²⁺','+'],['SO₄²⁻','-'],['Cu²⁺','+'],['SO₄²⁻','-']],toCathode:['Cu²⁺'],toAnode:['SO₄²⁻'],cathode:'Cu²⁺ + 2e⁻ → Cu',anode:'Cu → Cu²⁺ + 2e⁻',overall:'Cu(陽極) → Cu(陰極)',effect:'活性銅陽極優先溶解；陰極等量析銅。這就是銅電鍍/精煉的關鍵骨架。',deposit:true,wear:true,anodeCu:true,eq:'CuSO₄(aq)/Cu陽極：陽極溶 Cu，陰極鍍 Cu'},
+  moltenNaCl:{name:'熔融 NaCl｜惰性電極',ions:[['Na⁺','+'],['Cl⁻','-']],float:[['Na⁺','+'],['Cl⁻','-'],['Na⁺','+'],['Cl⁻','-']],toCathode:['Na⁺'],toAnode:['Cl⁻'],cathode:'Na⁺ + e⁻ → Na',anode:'2Cl⁻ − 2e⁻ → Cl₂↑',overall:'2NaCl(l) → 2Na + Cl₂↑',effect:'熔融態沒有水競爭，因此 Na⁺可在陰極直接還原成 Na；這是電冶金的重要差別。',deposit:true,wear:false,anodeCu:false,eq:'熔融 NaCl：陰極 Na；陽極 Cl₂'}
+};
+let state={case:'nacl',running:false,selectedIon:null,unlocked:new Set(),quizDone:new Set(),quizScore:0,placed:{cathode:[],anode:[]}};
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function current(){return cases[state.case]}
+function setFeedback(msg,type=''){const f=$('#feedback');f.textContent=msg;f.className='feedback '+type}
+function unlock(n){state.unlocked.add(n);document.querySelector(`.kcard[data-card="${n}"]`)?.classList.remove('locked');document.querySelector(`.step[data-step="${n}"]`)?.classList.add('done');$('#unlockCount').textContent=`${state.unlocked.size} / 4`;$('#progressPill').textContent=`掌握度 ${Math.round(state.unlocked.size/4*100)}%`}
+function buildIons(){
+  const tray=$('#ionTray');tray.innerHTML='';
+  current().ions.forEach(([label,charge])=>{const b=document.createElement('button');b.className='ion';b.draggable=true;b.dataset.ion=label;b.dataset.charge=charge;b.textContent=label;b.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',label)});b.addEventListener('click',()=>{state.selectedIon=label;$$('.ion').forEach(x=>x.classList.toggle('selected',x===b));setFeedback(`已選擇 ${label}。現在點陰極區或陽極區。`) });tray.appendChild(b)});
+  const stage=$('#ionStage');stage.innerHTML='';
+  current().float.forEach(([label,charge],i)=>{const d=document.createElement('div');d.className='float-ion '+(charge==='+'?'cation':'anion');d.textContent=label;d.style.left=(13+(i%2)*55+i*3)+'%';d.style.top=(18+(i*21)%58)+'%';d.style.animationDelay=(i*.7)+'s';stage.appendChild(d)});
+}
+function clearZones(){state.placed={cathode:[],anode:[]};['cathodeZone','anodeZone'].forEach(id=>{const z=$('#'+id);[...z.querySelectorAll('.ion')].forEach(x=>x.remove())});state.selectedIon=null;$$('.ion').forEach(x=>x.classList.remove('selected'))}
+function placeIon(label,zone){
+  if(!label)return;
+  state.placed[zone].push(label);
+  const chip=document.createElement('button');chip.className='ion';chip.textContent=label;chip.title='點擊可移除';chip.addEventListener('click',()=>{chip.remove();const i=state.placed[zone].indexOf(label);if(i>-1)state.placed[zone].splice(i,1)});
+  $(`#${zone}Zone`).appendChild(chip);state.selectedIon=null;$$('.ion').forEach(x=>x.classList.remove('selected'));
+}
+['cathodeZone','anodeZone'].forEach(id=>{const z=$('#'+id);z.addEventListener('dragover',e=>{e.preventDefault();z.classList.add('over')});z.addEventListener('dragleave',()=>z.classList.remove('over'));z.addEventListener('drop',e=>{e.preventDefault();z.classList.remove('over');placeIon(e.dataTransfer.getData('text/plain'),z.dataset.zone)});z.addEventListener('click',e=>{if(e.target===z||e.target.classList.contains('zone-title')||e.target.classList.contains('zone-hint')) placeIon(state.selectedIon,z.dataset.zone)})});
+function renderCase(){
+  state.case=$('#caseSelect').value;state.running=false;$('#bench').classList.remove('running');$('#powerBtn').textContent='接通電源';clearZones();buildIons();
+  const c=current();$('#caseSubtitle').textContent='場景：'+c.name;$('#caseEq').textContent=c.eq;$('#caseNote').textContent='先拖動下方粒子，再接通電源觀察。';
+  $('#deposit').classList.toggle('on',c.deposit);$('#anodeWear').classList.toggle('on',c.wear);$('#anode').classList.toggle('active-cu',c.anodeCu);$('#cathode').classList.toggle('active-cu',state.case==='moltenNaCl'?false:false);
+  setFeedback('先判斷：哪些粒子向陰極移動？哪些向陽極移動？注意「移動到」不等於「一定放電」。');
+}
+$('#caseSelect').addEventListener('change',renderCase);
+$('#powerBtn').addEventListener('click',()=>{state.running=!state.running;$('#bench').classList.toggle('running',state.running);$('#powerBtn').textContent=state.running?'切斷電源':'接通電源';if(state.running){unlock(1);$('#caseNote').textContent=current().effect;setFeedback(`觀察中｜陰極：${current().cathode}；陽極：${current().anode}`,'good')}});
+$('#checkMoveBtn').addEventListener('click',()=>{
+  const c=current();const hasC=c.toCathode.every(x=>state.placed.cathode.includes(x));const hasA=c.toAnode.every(x=>state.placed.anode.includes(x));const wrongC=state.placed.cathode.some(x=>c.toAnode.includes(x));const wrongA=state.placed.anode.some(x=>c.toCathode.includes(x));
+  if(hasC&&hasA&&!wrongC&&!wrongA){unlock(2);setFeedback('方向正確！陽離子朝陰極，陰離子朝陽極。下一步：別急著把「到達電極」等同於「會放電」。','good')}else{setFeedback('再看一次電荷：陽離子應朝陰極（−），陰離子應朝陽極（＋）。水分子不需要拖入任何一側。','bad')}
+});
+$('#reactionBtn').addEventListener('click',()=>{unlock(3);setFeedback(`本場景答案｜陰極：${current().cathode}；陽極：${current().anode}；總反應：${current().overall}`,'good')});
+$('#clearZonesBtn').addEventListener('click',()=>{clearZones();setFeedback('已清空。重新用「陰陽相吸」安排一次。')});
+$$('.q').forEach((q,idx)=>{q.querySelectorAll('.opt').forEach(btn=>btn.addEventListener('click',()=>{if(state.quizDone.has(idx))return;state.quizDone.add(idx);const ok=btn.dataset.v===q.dataset.answer;btn.classList.add(ok?'correct':'wrong');if(ok)state.quizScore++;else q.querySelector(`[data-v="${q.dataset.answer}"]`).classList.add('correct');$('#quizScore').textContent=`${state.quizScore} / 3`;if(state.quizDone.size===3){unlock(4);setFeedback(`檢測完成：${state.quizScore}/3。把不確定的題回到實驗台切換場景再做一次，會比死背更穩。`,state.quizScore>=2?'good':'')}}))});
+$('#rulesBtn').addEventListener('click',()=>$('#rulesModal').classList.add('show'));$('#closeModal').addEventListener('click',()=>$('#rulesModal').classList.remove('show'));$('#rulesModal').addEventListener('click',e=>{if(e.target.id==='rulesModal')e.currentTarget.classList.remove('show')});
+$('#resetBtn').addEventListener('click',()=>{state={case:'nacl',running:false,selectedIon:null,unlocked:new Set(),quizDone:new Set(),quizScore:0,placed:{cathode:[],anode:[]}};$('#caseSelect').value='nacl';$$('.kcard').forEach(x=>x.classList.add('locked'));$$('.step').forEach(x=>x.classList.remove('done'));$$('.opt').forEach(x=>x.classList.remove('correct','wrong'));$('#quizScore').textContent='0 / 3';$('#unlockCount').textContent='0 / 4';$('#progressPill').textContent='掌握度 0%';renderCase()});
+renderCase();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"7939e04a4baf43c8b86a560f74aac60e","spa":2}' crossorigin="anonymous"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"1c1c7799c54e46349cc23295b5e08299","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
